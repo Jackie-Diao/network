@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 
 @RestController
@@ -18,16 +20,20 @@ public class AudioController {
     @Autowired
     private AudioService audioService;
 
-    @GetMapping("/stream")
-    public ResponseEntity<byte[]> streamAudio() {
+    @GetMapping("/start")
+    public ResponseEntity<String> startAudioStream() {
         try {
-            byte[] audioData = audioService.getAudioData();  // 从设备获取字节数组
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, "audio/mpeg")  // 根据实际格式设置 MIME 类型
-                    .body(audioData);
-        } catch (IOException e) {
+            audioService.startStreamingAudio();
+            return ResponseEntity.ok("音频流已启动");
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("启动音频流失败");
         }
+    }
+
+    @GetMapping("/stop")
+    public ResponseEntity<String> stopAudioStream() {
+        audioService.stopStreamingAudio();
+        return ResponseEntity.ok("音频流已停止");
     }
 }

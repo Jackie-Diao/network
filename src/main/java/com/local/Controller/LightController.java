@@ -14,9 +14,9 @@ public class LightController {
 
     @PostMapping("/light")
     public Result controlLight(@RequestParam String action) {
-        boolean success= lightService.controlLight(action);
+        boolean success = lightService.controlLight(action);
         if (success) {
-            return Result.success("灯泡" + action);
+            return Result.success("灯泡 " + action);
         } else {
             return Result.error("控制灯泡失败");
         }

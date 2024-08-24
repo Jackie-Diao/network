@@ -21,7 +21,7 @@ public class VideoController {
     @GetMapping("/stream")
     public ResponseEntity<byte[]> streamVideo() {
         try {
-            byte[] videoData = videoService.getVideoData();  // 从设备获取字节数组
+            byte[] videoData = videoService.getVideoData();  // 从摄像头获取字节数组
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, "video/mp4")  // 根据实际格式设置 MIME 类型
                     .body(videoData);
@@ -31,4 +31,3 @@ public class VideoController {
         }
     }
 }
-
